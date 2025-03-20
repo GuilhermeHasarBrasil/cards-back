@@ -3,26 +3,34 @@ const connection = require("../dbStrategy/postgres")
 const criarCard = async (req, res) => {
     const { titulo, descricao, projeto_id, prazo, usuario_id, pontuacao } = req.body;
 
+    const nomes = usuario_id.map(user => user.nome);
+
     try {
         let result
 
         if (!pontuacao) {
             result = await connection.query(
                 'INSERT INTO cards (descricao, projeto_id, prazo, usuarios, titulo) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-                [descricao, projeto_id, prazo, [], titulo]
+                [descricao, projeto_id, prazo, nomes, titulo]
             );
         }else{
             result = await connection.query(
                 'INSERT INTO cards (descricao, projeto_id, prazo, pontuacao, usuarios, titulo) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-                [descricao, projeto_id, prazo, pontuacao, [], titulo]
+                [descricao, projeto_id, prazo, pontuacao, nomes, titulo]
             );
         }
-
+        
         const card_id = result.rows[0].id;
+
+        for(let i = 0; i < usuario_id.length; i++) {
+            await connection.query('INSERT INTO cards_usuarios (card_id, usuario_id) VALUES ($1, $2)', [card_id, usuario_id[i].id]);
+        }
+
         // await connection.query('INSERT INTO cards_usuarios (card_id, usuario_id) VALUES ($1, $2)', [card_id, usuario_id]);
 
         res.json({ message: 'Card criado com sucesso', card_id });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Erro ao criar card' });
     }
 };
