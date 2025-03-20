@@ -33,4 +33,4 @@ CREATE TABLE cards_usuarios (
 );
 
 alter table cards add column usuarios TEXT[];
-alter table cards add column  TEXT
+alter table cards add column titulo TEXT
