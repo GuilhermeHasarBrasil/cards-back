@@ -3,7 +3,6 @@ const connection = require('../dbStrategy/postgres');
 // Criar um novo projeto
 const criarProjeto = async (req, res) => {
     const { nome, descricao } = req.body;
-
     try {
         const result = await connection.query(
             'INSERT INTO projetos (nome, descricao) VALUES ($1, $2) RETURNING *',
