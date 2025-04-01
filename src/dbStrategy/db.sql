@@ -34,3 +34,5 @@ CREATE TABLE cards_usuarios (
 
 alter table cards add column usuarios TEXT[];
 alter table cards add column titulo TEXT
+alter table cards add column status_card TEXT;
+alter table usuarios add column score integer default 0;
