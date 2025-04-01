@@ -5,10 +5,12 @@ dotenv.config()
 const { Pool } = pg;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-const database = process.env.DATABASE_URL
-const databaseConfig = {
-      connectionString: database
-}
-const connection = new Pool(databaseConfig);
+const connection = new Pool({
+      user: process.env.USER,
+      host: process.env.HOST,
+      database: process.env.DATABASE,
+      password: process.env.PASSWORD,
+      port: process.env.PORT_DB
+});
 
 module.exports = connection
